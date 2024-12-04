@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: services-configmap
+  namespace: k8s-program
+data:
+  resources-db-url: "resources-db-service.k8s-program"
+  resources-db-port: "5433"
+  songs-db-url: "songs-db-service.k8s-program"
+  songs-db-port: "5432"
+  enable-eureka-client: "true"
+  eureka-uri: "eureka-server-service.k8s-program"

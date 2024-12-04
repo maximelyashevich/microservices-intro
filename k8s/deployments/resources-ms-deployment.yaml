@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resources-ms-deployment
+  namespace: k8s-program
+spec:
+  selector:
+    matchLabels:
+      app: resources-ms
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: resources-ms
+        owner: maksimelyashevich
+    spec:
+      containers:
+        - name: resources-ms
+          image: maksimelyashevich/resources-image:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: RESOURCES_DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: resources-db-url
+            - name: RESOURCES_DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: resources-db-port
+            - name: ENABLE_EUREKA_CLIENT
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: enable-eureka-client
+            - name: EUREKA_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: eureka-uri

@@ -1,0 +1,38 @@
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: manual
+provisioner: k8s.io/minikube-hostpath
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: songs-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data/songs"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: songs-pvc
+  namespace: k8s-program
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

@@ -1,0 +1,59 @@
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: hostpath
+provisioner: k8s.io/minikube-hostpath
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: songs-db-statefulset
+  namespace: k8s-program
+spec:
+  serviceName: "songs-db-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: songs-db
+  template:
+    metadata:
+      labels:
+        app: songs-db
+    spec:
+      containers:
+        - name: songs-db
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configmap
+                  key: songs-db-name
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: postgres-email
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: postgres-password
+          volumeMounts:
+            - name: db-storage
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: db-storage
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "hostpath"
+        resources:
+          requests:
+            storage: 1Gi
