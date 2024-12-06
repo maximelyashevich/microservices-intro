@@ -8,7 +8,7 @@ services:
       - 8080:8080
     restart: always
     environment:
-      RESOURCES_DB_URL: resources-db
+      RESOURCES_DB_URL: resourcesdb
       RESOURCES_DB_PORT: 5432
       ENABLE_EUREKA_CLIENT: "true"
       EUREKA_URI: "eureka-server"
@@ -25,7 +25,7 @@ services:
       - 8081:8081
     restart: always
     environment:
-      SONGS_DB_URL: songs-db
+      SONGS_DB_URL: songsdb
       ENABLE_EUREKA_CLIENT: "true"
       EUREKA_URI: "eureka-server"
     depends_on: # shows that that container (app) depends on db container

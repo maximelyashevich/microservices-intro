@@ -16,18 +16,11 @@ spec:
         app: songs-ms
         owner: maksimelyashevich
     spec:
-      volumes:
-        - name: songs-storage
-          persistentVolumeClaim:
-            claimName: songs-pvc
       containers:
         - name: songs-ms
           image: maksimelyashevich/songs-image:latest
           ports:
             - containerPort: 8081
-          volumeMounts:
-            - name: songs-storage
-              mountPath: /app/data
           env:
             - name: SONGS_DB_URL
               valueFrom:

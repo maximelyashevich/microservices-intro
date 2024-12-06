@@ -1,13 +1,3 @@
-
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: hostpath
-provisioner: k8s.io/minikube-hostpath
-reclaimPolicy: Delete
-volumeBindingMode: Immediate
-
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -46,11 +36,21 @@ spec:
                   name: postgres-secret
                   key: postgres-password
           volumeMounts:
-            - name: db-storage
+            - name: resources-db-storage
               mountPath: /var/lib/postgresql/data
+            - name: db-init-volume
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: db-init-volume
+          configMap:
+            name: postgres-configmap
+            defaultMode: 484
+            items:
+              - key: "resources-db-init.sql"
+                path: "init.sql"
   volumeClaimTemplates:
     - metadata:
-        name: db-storage
+        name: resources-db-storage
       spec:
         accessModes: [ "ReadWriteOnce" ]
         storageClassName: "hostpath"

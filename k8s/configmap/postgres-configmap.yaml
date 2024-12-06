@@ -4,5 +4,18 @@ metadata:
   name: postgres-configmap
   namespace: k8s-program
 data:
-  resources-db-name: resources-db
-  songs-db-name: songs-db
+  resources-db-name: resourcesdb
+  songs-db-name: songsdb
+  resources-db-init.sql: |
+    CREATE TABLE IF NOT EXISTS resources (
+        id SERIAL PRIMARY KEY,
+        blob BYTEA
+    );
+  songs-db-init.sql: |
+    CREATE TABLE IF NOT EXISTS songs (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(200),
+        artist VARCHAR(150),
+        album VARCHAR(150)
+    );
+
