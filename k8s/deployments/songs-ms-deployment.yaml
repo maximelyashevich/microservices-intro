@@ -10,6 +10,11 @@ spec:
     matchLabels:
       app: songs-ms
   replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
@@ -18,7 +23,7 @@ spec:
     spec:
       containers:
         - name: songs-ms
-          image: maksimelyashevich/songs-image:latest
+          image: maksimelyashevich/songs-image:v2
           ports:
             - containerPort: 8081
           env:
