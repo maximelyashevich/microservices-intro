@@ -41,3 +41,24 @@ spec:
                 configMapKeyRef:
                   name: services-configmap
                   key: eureka-uri
+          startupProbe:
+            httpGet:
+              path: /resources/health/startup
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /resources/health/readiness
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /resources/health/liveness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 30

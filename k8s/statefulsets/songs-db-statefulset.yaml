@@ -35,6 +35,27 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: postgres-password
+          startupProbe:
+            exec:
+              command:
+                - psql
+                - -U
+                - postgres
+                - -c
+                - "SELECT 1;"
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 5
+            periodSeconds: 10
           volumeMounts:
             - name: songs-db-storage
               mountPath: /var/lib/postgresql/data
