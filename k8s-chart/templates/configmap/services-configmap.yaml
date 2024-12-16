@@ -3,6 +3,9 @@ kind: ConfigMap
 metadata:
   name: services-configmap
   namespace: {{ .Values.namespace }}
+  labels:
+    current-date: {{ template "current-date" . }}
+    version: {{ template "version" . }}
 data:
   resources-db-url: "resources-db-service.k8s-program"
   resources-db-port: "5433"

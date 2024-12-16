@@ -3,6 +3,9 @@ kind: ConfigMap
 metadata:
   name: postgres-configmap
   namespace: {{ .Values.namespace }}
+  labels:
+    current-date: {{ template "current-date" . }}
+    version: {{ template "version" . }}
 data:
   resources-db-name: resourcesdb
   songs-db-name: songsdb
