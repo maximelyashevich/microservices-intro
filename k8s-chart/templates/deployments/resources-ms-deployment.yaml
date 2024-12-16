@@ -1,0 +1,64 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resources-ms-deployment
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: resources-ms
+  replicas: {{ .Values.resourcesMs.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: resources-ms
+        owner: maksimelyashevich
+    spec:
+      containers:
+        - name: resources-ms
+          image: {{ .Values.resourcesMs.image }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: RESOURCES_DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: resources-db-url
+            - name: RESOURCES_DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: resources-db-port
+            - name: ENABLE_EUREKA_CLIENT
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: enable-eureka-client
+            - name: EUREKA_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: eureka-uri
+          startupProbe:
+            httpGet:
+              path: /resources/health/startup
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /resources/health/readiness
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /resources/health/liveness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 30

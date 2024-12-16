@@ -1,0 +1,18 @@
+
+namespace: k8s-program
+
+eurekaServer:
+  replicaCount: 1
+  image: maksimelyashevich/eureka-server-image:latest
+
+pgAdmin:
+  replicaCount: 1
+  image: dpage/pgadmin4
+
+resourcesMs:
+  replicaCount: 2
+  image: maksimelyashevich/resources-image:latest
+
+songsMs:
+  replicaCount: 2
+  image: maksimelyashevich/songs-image:v2
